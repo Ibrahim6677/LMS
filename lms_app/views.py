@@ -28,10 +28,18 @@ def index(request):
 
 # Books page view
 def books(request):
+    search = Book.objects.all()
+    title = None
+    if 'search_name' in request.GET:
+        title = request.GET['search_name']
+        if title:
+            search = search.filter(title__icontains=title)
+    
     context = {
-        'books': Book.objects.all(),
+        'books': search,
         'categories': Category.objects.all(),
         'category_form': CategoryForm(),
+        'formcat': CategoryForm(),
     }
     return render(request, 'pages/books.html', context)
 
